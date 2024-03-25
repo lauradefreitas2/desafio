@@ -101,27 +101,22 @@ public class MenuController {
 
         // Adicionando um cabeçalho ao relatório
         dadosRelatorio.add("RELATÓRIO - CONTROLE DE ATIVIDADES");
-
-        // Adicionando informações de cada sequência ao relatório
         List<Sequencia> sequencias = Mock.criarSequencias();
         for (Sequencia sequencia : sequencias) {
             dadosRelatorio.add("Número de sequência: " + sequencia.getNumeroSequencial());
-            dadosRelatorio.add("Data de início: " + sequencia.getDataInicio());
-            dadosRelatorio.add("Data final: " + sequencia.getDataFinal());
 
-            // Adicionando informações dos desenvolvedores associados à sequência
-            List<Desenvolvedor> desenvolvedores = sequencia.getDesenvolvedores();
+            // Acessar o projeto associado à sequência
+            Projeto projeto = sequencia.getProjeto();
+            dadosRelatorio.add("Data de início: " + projeto.getDataInicio());
+            dadosRelatorio.add("Data final: " + projeto.getDataFinal());
+
+            // Adicionando informações dos desenvolvedores associados ao projeto
+            List<Desenvolvedor> desenvolvedores = projeto.getDesenvolvedores();
             for (Desenvolvedor desenvolvedor : desenvolvedores) {
                 dadosRelatorio.add("Desenvolvedor: " + desenvolvedor.getNome() + " - Matrícula: " + desenvolvedor.getMatricula());
             }
-
-            // Adicionando o status de desenvolvimento e o domínio de ambiente
-            dadosRelatorio.add("Status de desenvolvimento: " + sequencia.getStatusDesenvolvimento().getDescricao());
-            dadosRelatorio.add("Domínio de ambiente: " + sequencia.getDominioAmbiente().getDescricao());
-
-            // Adicionando uma linha em branco para separar as sequências no relatório
-            dadosRelatorio.add("");
         }
+
 
         return dadosRelatorio;
     }
