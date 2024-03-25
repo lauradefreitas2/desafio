@@ -1,15 +1,23 @@
 package org.example.controller;
 
+import org.example.model.Desenvolvedor;
 import org.example.service.DesenvolvedorService;
+import org.example.service.RelatorioService;
 import org.example.service.SequenciaService;
+import org.example.util.Mock;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
 import static org.example.service.DesenvolvedorService.LogManager;
 
+import java.util.Scanner;
+import java.util.logging.Logger;
+
 public class MenuController {
-    private static final Logger logger = LogManager.getLogger(String.valueOf(MenuController.class));
+    private static final Logger logger = Logger.getLogger(MenuController.class.getName());
     private final DesenvolvedorService desenvolvedorService;
     private final SequenciaService sequenciaService;
     private final Scanner scanner;
@@ -31,7 +39,7 @@ public class MenuController {
             System.out.println("5. Encerrar");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
-            scanner.nextLine(); // Limpar o buffer do scanner
+            scanner.nextLine();
 
             switch (opcao) {
                 case 1:
@@ -84,11 +92,39 @@ public class MenuController {
     private void encerrar() {
         logger.info("Encerrando programa...");
         System.out.println("Encerrando programa...");
-        // Aqui você pode adicionar qualquer operação de encerramento, se necessário
+
+        RelatorioService.gerarRelatorio(gerarDadosRelatorio(), "C:\\suportedbdc_resource\\batch\\capacitacao\\capacitacao_POSO");
     }
 
-    public static void main(String[] args) {
-        MenuController menuController = new MenuController();
-        menuController.exibirMenu();
+    private List<String> gerarDadosRelatorio() {
+        List<String> dadosRelatorio = new ArrayList<>();
+
+        // Adicionando um cabeçalho ao relatório
+        dadosRelatorio.add("RELATÓRIO - CONTROLE DE ATIVIDADES");
+
+        // Adicionando informações de cada sequência ao relatório
+        List<Sequencia> sequencias = Mock.criarSequencias();
+        for (Sequencia sequencia : sequencias) {
+            dadosRelatorio.add("Número de sequência: " + sequencia.getNumeroSequencial());
+            dadosRelatorio.add("Data de início: " + sequencia.getDataInicio());
+            dadosRelatorio.add("Data final: " + sequencia.getDataFinal());
+
+            // Adicionando informações dos desenvolvedores associados à sequência
+            List<Desenvolvedor> desenvolvedores = sequencia.getDesenvolvedores();
+            for (Desenvolvedor desenvolvedor : desenvolvedores) {
+                dadosRelatorio.add("Desenvolvedor: " + desenvolvedor.getNome() + " - Matrícula: " + desenvolvedor.getMatricula());
+            }
+
+            // Adicionando o status de desenvolvimento e o domínio de ambiente
+            dadosRelatorio.add("Status de desenvolvimento: " + sequencia.getStatusDesenvolvimento().getDescricao());
+            dadosRelatorio.add("Domínio de ambiente: " + sequencia.getDominioAmbiente().getDescricao());
+
+            // Adicionando uma linha em branco para separar as sequências no relatório
+            dadosRelatorio.add("");
+        }
+
+        return dadosRelatorio;
     }
-}
+    }
+
+
