@@ -66,14 +66,23 @@ public class MenuController {
         } while (opcao != 5);
     }
 
-    private int lerOpcaoMenu() {
-        try {
-            return Integer.parseInt(reader.readLine());
-        } catch (IOException | NumberFormatException e) {
-            logger.severe("Erro ao ler a opção do menu: " + e.getMessage());
+    public int lerOpcaoMenu() {
+    try {
+        // Lê a linha digitada pelo usuário
+        String input = scanner.nextLine();
+
+        // Se o input estiver vazio, retorna zero (representando a ação de pressionar "Enter")
+        if (input.isEmpty()) {
             return 0;
         }
+
+        // Caso contrário, converte o input para inteiro e retorna
+        return Integer.parseInt(input);
+    } catch (NumberFormatException e) {
+        logger.severe("Erro ao ler a opção do menu: " + e.getMessage());
+        return 0;
     }
+}
 
     private void inserirDesenvolvedor() {
         logger.info("Opção selecionada: Inserir desenvolvedor");
